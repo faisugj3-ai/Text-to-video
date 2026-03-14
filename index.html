@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text2Video AI - Convert Text to Video Instantly</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+        body { 
+            background: linear-gradient(135deg, #0f0f23 0%, #1e1b4b 50%, #2a1d5c 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 45px rgba(0,0,0,0.3);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #a855f7, #ec4899, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .btn-glow {
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.4);
+        }
+        .btn-glow:hover {
+            box-shadow: 0 0 50px rgba(168, 85, 247, 0.6);
+            transform: translateY(-2px);
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        .float { animation: float 3s ease-in-out infinite; }
+        .fade-in-up {
+            animation: fadeInUp 1s ease-out;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .progress-fill {
+            transition: width 0.4s ease;
+        }
+        .shimmer {
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite;
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+    </style>
+</head>
+<body class="text-white">
+    <!-- Background Animation -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        <div class="absolute -top-40 -right-40 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
+        <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-pink-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div class="absolute top-40 left-1/2 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse delay-500"></div>
+    </div>
+
+    <div class="relative z-10">
+        <!-- Header -->
+        <header class="py-8 px-6">
+            <div class="max-w-6xl mx-auto flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center">
+                        <span class="text-2xl">🎬</span>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold gradient-text">Text2Video AI</h1>
+                        <p class="text-sm opacity-75">Instant Video Creation</p>
+                    </div>
+                </div>
+                <div class="text-sm opacity-75 hidden md:block">
+                    Powered by Web Speech API • 100% Free
+                </div>
+            </div>
+        </header>
+
+        <div class="max-w-4xl mx-auto px-6 pb-16">
+            <!-- Hero -->
+            <div class="text-center mb-20 fade-in-up">
+                <div class="inline-block p-4 bg-white/10 backdrop-blur-sm rounded-3xl mb-8 float">
+                    <h1 class="text-5xl md:text-7xl font-black mb-6 leading-tight">
+                        Text to 
+                        <span class="block gradient-text text-6xl md:text-8xl">Stunning Videos</span>
+                    </h1>
+                </div>
+                <p class="text-xl md:text-2xl opacity-90 max-w-3xl mx-auto mb-12 leading-relaxed">
+                    Transform long articles, blog posts, stories, or any text into 
+                    <strong class="gradient-text">professional videos</strong> with AI voiceovers, animations, and effects.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center max-w-md mx-auto">
+                    <span class="px-6 py-2 bg-white/10 backdrop-blur-sm rounded-full text-sm opacity-75">⚡ Instant</span>
+                    <span class="px-6 py-2 bg-white/10 backdrop-blur-sm rounded-full text-sm opacity-75">🎙️ 20+ Voices</span>
+                    <span class="px-6 py-2 bg-white/10 backdrop-blur-sm rounded-full text-sm opacity-75">💾 Download</span>
+                </div>
+            </div>
+
+            <!-- Main Input -->
+            <div class="glass rounded-3xl p-8 md:p-12 mb-12 fade-in-up">
+                <label class="block text-xl font-semibold mb-6 text-center">
+                    📝 <span class="gradient-text">Paste Your Text Here</span>
+                </label>
+                <textarea 
+                    id="textInput"
+                    rows="10"
+                    placeholder="Paste your article, blog post, story, script, or any long text here...
+Examples:
+- Blog posts • Articles • Stories • Presentations • Social media content • Marketing copy..."
+                    class="w-full p-8 rounded-3xl bg-white/5 border-2 border-white/10 focus:border-purple-400/50 focus:outline-none focus:ring-4 focus:ring-purple-500/20 text-lg text-white placeholder-gray-400 resize-vertical min-h-[200px] transition-all duration-300"
+                ></textarea>
+
+                <!-- Settings -->
+                <div class="grid md:grid-cols-3 gap-6 mt-8">
+                    <div>
+                        <label class="block text-sm font-medium mb-3 opacity-90">🎙️ Voice Style</label>
+                        <select id="voiceSelect" class="w-full p-4 rounded-2xl bg-white/5 border border-white/10 focus:border-purple-400/50 focus:outline-none focus:ring-2 focus:ring-purple-500/20 text-white transition-all">
+                            <option value="en-US-JennyNeural">🇺🇸 Jenny (Natural Female)</option>
+                            <option value="en-US-AriaNeural">🇺🇸 Aria (Friendly Female)</option>
+                            <option value="en-US-GuyNeural">🇺🇸 Guy (Professional Male)</option>
+                            <option value="en-GB-SoniaNeural">🇬🇧 Sonia (British Female)</option>
+                            <option value="en-IN-NeerjaNeural">🇮🇳 Neerja (Indian Female)</option>
+                            <option value="en-AU-CatherineNeural">🇦🇺 Catherine (Australian Female)</option>
+                            <option value="es-ES-ElviraNeural">🇪🇸 Elvira (Spanish Female)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-3 opacity-90">⚡ Speech Speed</label>
+                        <select id="speedSelect" class="w-full p-4 rounded-2xl bg-white/5 border border-white/10 focus:border-purple-400/50 focus:outline-none focus:ring-2 focus:ring-purple-500/20 text-white transition-all">
+                            <option value="0.8">🐌 Slow (0.8x)</option>
+                            <option value="1.0" selected>🚶 Normal (1.0x)</option>
+                            <option value="1.2">🏃 Fast (1.2x)</option>
+                            <option value="1.5">⚡ Very Fast (1.5x)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-3 opacity-90">🎨 Animation Style</label>
+                        <select id="styleSelect" class="w-full p-4 rounded-2xl bg-white/5 border border-white/10 focus:border-purple-400/50 focus:outline-none focus:ring-2 focus:ring-purple-500/20 text-white transition-all">
+                            <option value="cosmic">🌌 Cosmic Particles</option>
+                            <option value="ocean">🌊 Ocean Waves</option>
+                            <option value="neon">💫 Neon Glow</option>
+                            <option value="minimal">✨ Minimal</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button 
+                    id="generateBtn"
+                    class="w-full mt-10 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 hover:from-purple-700 hover:via-pink-700 hover:to-blue-700 text-white font-bold py-8 px-12 rounded-3xl text-xl transition-all duration-300 btn-glow shadow-2xl hover:shadow-purple-500/50 transform hover:-translate-y-1"
+                >
+                    <span class="flex items-center justify-center">
+                        ✨ <span id="btnText">Generate My Video</span>
+                        <div id="btnSpinner" class="ml-3 w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin hidden"></div>
+                    </span>
+                </button>
+            </div>
+
+            <!-- Progress -->
+            <div id="progressSection" class="glass rounded-3xl p-12 text-center hidden fade-in-up">
+                <lottie-player 
+                    src="https://assets10.lottiefiles.com/packages/lf20_yf2kjson.json"
+                    background="transparent"
+                    speed="1"
+                    style="width: 120px; height: 120px; margin: 0 auto;"
+                    loop
+                    autoplay>
+                </lottie-player>
+                <h3 class="text-3xl font-bold mt-8 mb-4 gradient-text">🎥 Creating Your Video...</h3>
+                <div class="w-full bg-white/10 rounded-2xl h-4 mb-6 overflow-hidden">
+                    <div id="progressBar" class="progress-fill bg-gradient-to-r from-purple-400 to-pink-400 h-4 rounded-2xl shadow-lg" style="width: 0%"></div>
+                </div>
+                <div id="progressText" class="text-lg opacity-90 font-medium">Analyzing text and preparing AI voice...</div>
+                <div class="mt-4 text-sm opacity-75 space-y-1">
+                    <div>✅ Real-time animations</div>
+                    <div>✅ AI voice synthesis</div>
+                    <div>✅ Video encoding</div>
+                </div>
+            </div>
+
+            <!-- Video Result -->
+            <div id="videoSection" class="glass rounded-3xl p-12 hidden fade-in-up">
+                <div class="text-center mb-12">
+                    <h3 class="text-4xl font-bold mb-4 gradient-text">🎉 Your Video is Ready!</h3>
+                    <p class="text-xl opacity-90 mb-8">Perfect for YouTube, TikTok, Instagram, or presentations</p>
+                </div>
+                <div class="relative mb-8">
+                    <video 
+                        id="previewVideo" 
+                        controls 
+                        class="w-full max-w-4xl mx-auto rounded-3xl shadow-2xl block bg-gradient-to-br from-gray-900 to-black"
+                        style="max-height: 500px;"
+                        autoplay
+                        loop
+                    >
+                        Your browser does not support video playback.
+                    </video>
+                    <div class="absolute top-4 right-4 flex flex-col sm:flex-row gap-3 bg-black/50 backdrop-blur-sm p-4 rounded-2xl">
+                        <button id="downloadBtn" class="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 p-4 rounded-2xl font-bold transition-all shadow-lg hover:shadow-green-500/50 flex items-center space-x-2">
+                            <span>💾 Download Video</span>
+                        </button>
+                        <button id="shareBtn" class="bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 p-4 rounded-2xl font-bold transition-all shadow-lg hover:shadow-blue-500/50 flex items-center space-x-2">
+                            <span>📤 Share</span>
+                        </button>
+                        <button id="regenerateBtn" class="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 p-4 rounded-2xl font-bold transition-all shadow-lg hover:shadow-purple-500/50 flex items-center space-x-2">
+                            <span>🔄 New Video</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="text-center text-lg opacity-75">
+                    <p>✅ HD Quality • ✅ Royalty Free • ✅ No Watermark</p>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="grid md:grid-cols-4 gap-6 mt-20 opacity-75">
+                <div class="text-center p-6">
+                    <div class="text-3xl font-bold gradient-text mb-2">0+</div>
+                    <div>Videos Created</div>
+                </div>
+                <div class="text-center p-6">
+                    <div class="text-3xl font-bold gradient-text mb-2">100%</div>
+                    <div>Free Forever</div>
+                </div>
+                <div class="text-center p-6">
+                    <div class="text-3xl font-bold gradient-text mb-2">20+</div>
+                    <div>AI Voices</div>
+                </div>
+                <div class="text-center p-6">
+                    <div class="text-3xl font-bold gradient-text mb-2">1s</div>
+                    <div>Per Sentence</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class TextToVideoAI {
+            constructor() {
+                this.synth = window.speechSynthesis;
+                this.video = document.getElementById('previewVideo');
+                this.canvas = document.createElement('canvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.mediaRecorder = null;
+                this.chunks = [];
+                this.isGenerating = false;
+                
+                this.init();
+                this.loadSampleText();
+            }
+
+            init() {
+                // Elements
+                this.elements = {
+                    generateBtn: document.getElementById('generateBtn'),
+                    textInput: document.getElementById('textInput'),
+                    progressSection: document.getElementById('progressSection'),
+                    videoSection: document.getElementById('videoSection'),
+                    progressBar: document.getElementById('progressBar'),
+                    progressText: document.getElementById('progressText'),
+                    btnText: document.getElementById('btnText'),
+                    btnSpinner: document.getElementById('btnSpinner'),
+                    downloadBtn: document.getElementById('downloadBtn'),
+                    shareBtn: document.getElementById('shareBtn'),
+                    regenerateBtn: document.getElementById('regenerateBtn')
+                };
+
+                // Event listeners
+                this.elements.generateBtn.addEventListener('click', () => this.generateVideo());
+                this.elements.downloadBtn.addEventListener('click', () => this.downloadVideo());
+                this.elements.shareBtn.addEventListener('click', () => this.shareVideo());
+                this.elements.regenerateBtn.addEventListener('click', () => this.regenerate());
+
+                // Canvas setup
+                this.canvas.width = 1280;
+                this.canvas.height = 720;
+                document.body.appendChild(this.canvas);
+                this.canvas.style.display = 'none';
+
+                // Load voices
+                if (this.synth.getVoices().length) {
+                    this.populateVoices();
+                } else {
+                    this.synth.onvoiceschanged = () => this.populateVoices();
+                }
+            }
+
+            populateVoices() {
+                const voices = this.synth.getVoices();
+                const voiceSelect = document.getElementById('voiceSelect');
+                // Voices are already populated in HTML options
+            }
+
+            loadSampleText() {
+                this.elements.textInput.value = `🚀 Welcome to Text2Video AI - the future of content creation!
+
+Transform any text into professional videos in seconds. Whether you're a:
+- Blogger creating YouTube content
+- Marketer making social media ads  
+- Teacher producing educational videos
+- Author turning stories into visual experiences
+
+This AI tool handles everything:
+✅ Natural AI voiceovers (20+ voices)
+✅ Beautiful animated backgrounds
+✅ Perfect text synchronization  
+✅ HD video export ready to share
+
+No editing skills required. Just paste your text and download your video!
+
+Start creating engaging content that captivates your audience today! ✨`;
+            }
+
+            async generateVideo() {
+                const text = this.elements.textInput.value.trim();
+                if (!text || this.isGenerating) return;
+
+                this.isGenerating = true;
+                this.setLoadingState(true);
+
+                // Split into sentences
+                const sentences = this.splitIntoSentences(text);
+                const totalSentences = sentences.length;
+
+                // Setup recording
+                const stream = this.canvas.captureStream(30);
+                this.mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm;codecs=vp9' });
+                this.chunks = [];
+
+                this.mediaRecorder.ondataavailable = (e) => this.chunks.push(e.data);
+                this.mediaRecorder.onstop = () => {
+                    const blob = new Blob(this.chunks, { type: 'video/webm' });
+                   
